@@ -27,11 +27,11 @@
 }
 
 #dashtopanelScrollview .app-well-app .overview-icon,
-#dashtopanelTaskbar .show-apps .overview-icon {
+.dashtopanelMainPanel .show-apps .overview-icon {
+	background: none;
 	border: none;
 	margin: 0;
 	padding: 0;
-  background: none;
 }
 
 #dashtopanelScrollview .app-well-app .overview-label {
@@ -44,6 +44,7 @@
 	background: none;
 }
 
+.dashtopanelMainPanel .show-apps:hover .overview-icon,
 #dashtopanelScrollview .app-well-app:hover .dtp-container,
 #dashtopanelScrollview .app-well-app:focus .dtp-container {
 	background-color: rgba(238, 238, 236, 0.1);
@@ -113,12 +114,12 @@
 	spacing: 0px; 
 }
 
-.showdesktop-button {
-	border: 0 solid rgba(200, 200, 200, .2);
+.showdesktop-button-dark-hovered {
+	background-color: rgba(200, 200, 200, .4);
 }
 
-.showdesktop-button-hovered {
-	background-color: rgba(200, 200, 200, .4);
+.showdesktop-button-light-hovered {
+	background-color: rgba(55, 55, 55, .4);
 }
 
 .panel-corner.hidden:active, .panel-corner.hidden:overview, .panel-corner.hidden:focus {

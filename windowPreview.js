@@ -24,7 +24,6 @@ const Mainloop = imports.mainloop;
 const Meta = imports.gi.Meta;
 const PopupMenu = imports.ui.popupMenu;
 const Signals = imports.signals;
-const Shell = imports.gi.Shell;
 const St = imports.gi.St;
 const WindowManager = imports.ui.windowManager;
 const Workspace = imports.ui.workspace;
@@ -53,7 +52,6 @@ const FADE_SIZE = 36;
 const PEEK_INDEX_PROP = '_dtpPeekInitialIndex';
 
 let headerHeight = 0;
-let clipHeight = 0;
 let alphaBg = 0;
 let isLeftButtons = false;
 let isTopHeader = true;
@@ -80,7 +78,7 @@ var PreviewMenu = Utils.defineClass({
         this.isVertical = geom.position == St.Side.LEFT || geom.position == St.Side.RIGHT;
         this._translationProp = 'translation_' + (this.isVertical ? 'x' : 'y');
         this._translationDirection = (geom.position == St.Side.TOP || geom.position == St.Side.LEFT ? -1 : 1);
-        this._translationOffset = Math.min(Panel.size, MAX_TRANSLATION) * this._translationDirection;
+        this._translationOffset = Math.min(panel.dtpSize, MAX_TRANSLATION) * this._translationDirection;
 
         this.menu = new St.Widget({ 
             name: 'preview-menu', 
@@ -192,7 +190,7 @@ var PreviewMenu = Utils.defineClass({
             if (!this.opened) {
                 this._refreshGlobals();
                 
-                this.set_height(clipHeight);
+                this.set_height(this.clipHeight);
                 this.menu.show();
                 
                 setStyle(this.menu, 'background: ' + Utils.getrgbaColor(this.panel.dynamicTransparency.backgroundColorRgb, alphaBg));
@@ -326,7 +324,7 @@ var PreviewMenu = Utils.defineClass({
         let l = Math.max(windows.length, currentPreviews.length);
 
         for (let i = 0; i < l; ++i) {
-            if (currentPreviews[i] && windows[i] && windows[i] != currentPreviews[i].window) {
+            if (currentPreviews[i] && windows[i]) {
                 currentPreviews[i].assignWindow(windows[i], this.opened);
             } else if (!currentPreviews[i]) {
                 this._addNewPreview(windows[i]);
@@ -347,7 +345,6 @@ var PreviewMenu = Utils.defineClass({
             if (currentIndex < 0) {
                 this._addNewPreview(windows[i]);
             } else {
-                currentPreviews[currentIndex].cancelAnimateOut();
                 currentPreviews[currentIndex].assignWindow(windows[i]);
                 currentPreviews.splice(currentIndex, 1);
 
@@ -442,31 +439,31 @@ var PreviewMenu = Utils.defineClass({
         
         if (this.isVertical) {
             w = previewSize;
-            clipHeight = this.panel.monitor.height;
+            this.clipHeight = this.panel.monitor.height;
             y = this.panel.monitor.y;
         } else {
             w = this.panel.monitor.width;
-            clipHeight = (previewSize + headerHeight);
+            this.clipHeight = (previewSize + headerHeight);
             x = this.panel.monitor.x;
         }
 
         if (geom.position == St.Side.LEFT) {
-            x = this.panel.monitor.x + Panel.size + panelBoxTheme.get_padding(St.Side.LEFT);
+            x = this.panel.monitor.x + this.panel.dtpSize + panelBoxTheme.get_padding(St.Side.LEFT);
         } else if (geom.position == St.Side.RIGHT) {
-            x = this.panel.monitor.x + this.panel.monitor.width - (Panel.size + previewSize) - panelBoxTheme.get_padding(St.Side.RIGHT);
+            x = this.panel.monitor.x + this.panel.monitor.width - (this.panel.dtpSize + previewSize) - panelBoxTheme.get_padding(St.Side.RIGHT);
         } else if (geom.position == St.Side.TOP) {
-            y = this.panel.monitor.y + Panel.size + panelBoxTheme.get_padding(St.Side.TOP);
+            y = this.panel.monitor.y + this.panel.dtpSize + panelBoxTheme.get_padding(St.Side.TOP);
         } else { //St.Side.BOTTOM
-            y = this.panel.monitor.y + this.panel.monitor.height - (Panel.size + panelBoxTheme.get_padding(St.Side.BOTTOM) + previewSize + headerHeight);
+            y = this.panel.monitor.y + this.panel.monitor.height - (this.panel.dtpSize + panelBoxTheme.get_padding(St.Side.BOTTOM) + previewSize + headerHeight);
         }
 
-        Utils.setClip(this, x, y, w, clipHeight);
+        Utils.setClip(this, x, y, w, this.clipHeight);
     },
 
     _updatePosition: function() {
         let sourceNode = this.currentAppIcon.actor.get_theme_node();
         let sourceContentBox = sourceNode.get_content_box(this.currentAppIcon.actor.get_allocation_box());
-        let sourceAllocation = Shell.util_get_transformed_allocation(this.currentAppIcon.actor);
+        let sourceAllocation = Utils.getTransformedAllocation(this.currentAppIcon.actor);
         let [previewsWidth, previewsHeight] = this._getPreviewsSize();
         let appIconMargin = Me.settings.get_int('appicon-margin') / scaleFactor;
         let x = 0, y = 0;
@@ -526,7 +523,7 @@ var PreviewMenu = Utils.defineClass({
         let endBg = Utils.getrgbaColor(this.panel.dynamicTransparency.backgroundColorRgb, 0)
         let fadeStyle = 'background-gradient-start:' + startBg + 
                         'background-gradient-end:' + endBg + 
-                        'background-gradient-direction:' + Panel.getOrientation();
+                        'background-gradient-direction:' + this.panel.getOrientation();
 
         if (this.isVertical) {
             y = end ? this.panel.monitor.height - FADE_SIZE : 0;
@@ -614,7 +611,7 @@ var PreviewMenu = Utils.defineClass({
             let immediate = !stayHere && this.peekInitialWorkspaceIndex != Utils.getCurrentWorkspace().index();
 
             this._restorePeekedWindowStack();
-            this._focusMetaWindow(255, this._peekedWindow, immediate);
+            this._focusMetaWindow(255, this._peekedWindow, immediate, true);
             this._peekedWindow = null;
 
             if (!stayHere) {
@@ -639,14 +636,14 @@ var PreviewMenu = Utils.defineClass({
         Main.wm._shouldAnimate = shouldAnimate;
     },
 
-    _focusMetaWindow: function(dimOpacity, window, immediate) {
+    _focusMetaWindow: function(dimOpacity, window, immediate, ignoreFocus) {
         if (Main.overview.visibleTarget) {
             return;
         }
 
         window.get_workspace().list_windows().forEach(mw => {
             let wa = mw.get_compositor_private();
-            let isFocused = mw == window;
+            let isFocused = !ignoreFocus && mw == window;
 
             if (wa) {
                 if (isFocused) {
@@ -680,7 +677,7 @@ var PreviewMenu = Utils.defineClass({
                 delete this._peekedWindow[PEEK_INDEX_PROP];
             }
 
-            if(this._peekedWindow.minimized) {
+            if (this._peekedWindow.minimized) {
                 windowActor.hide();
             }
         }
@@ -708,7 +705,7 @@ var Preview = Utils.defineClass({
         this._previewDimensions = this._getPreviewDimensions();
         this.animatingOut = false;
 
-        let box = new St.Widget({ layout_manager: new Clutter.BoxLayout({ vertical: true }), y_expand: true });
+        let box = new St.Widget({ layout_manager: new Clutter.BoxLayout({ orientation: Clutter.Orientation.VERTICAL }), y_expand: true });
         let [previewBinWidth, previewBinHeight] = this._getBinSize();
         let closeButton = new St.Button({ style_class: 'window-close', accessible_name: 'Close window' });
 
@@ -820,6 +817,7 @@ var Preview = Utils.defineClass({
             _assignWindowClone();
         }
 
+        this._cancelAnimateOut();
         this._removeWindowSignals();
         this.window = window;
         this._needsCloseButton = window.can_close() && !Utils.checkIfWindowHasTransient(window);
@@ -834,15 +832,6 @@ var Preview = Utils.defineClass({
 
             Utils.stopAnimations(this);
             Utils.animate(this, tweenOpts);
-        }
-    },
-
-    cancelAnimateOut: function() {
-        if (this.animatingOut) {
-            this.animatingOut = false;
-
-            Utils.stopAnimations(this);
-            Utils.animate(this, getTweenOpts({ opacity: 255 }));
         }
     },
 
@@ -885,13 +874,16 @@ var Preview = Utils.defineClass({
     },
 
     _onCloseBtnClick: function() {
-        this.window.delete(global.get_current_time());
         this._hideOrShowCloseButton(true);
         this.reactive = false;
 
         if (!Me.settings.get_boolean('group-apps')) {
             this._previewMenu.close();
+        } else {
+            this._previewMenu.endPeekHere();
         }
+
+        this.window.delete(global.get_current_time());
     },
 
     _onButtonReleaseEvent: function(e) {
@@ -910,6 +902,15 @@ var Preview = Utils.defineClass({
         }
 
         return Clutter.EVENT_STOP;
+    },
+
+    _cancelAnimateOut: function() {
+        if (this.animatingOut) {
+            this.animatingOut = false;
+
+            Utils.stopAnimations(this);
+            Utils.animate(this, getTweenOpts({ opacity: 255, width: this.cloneWidth, height: this.cloneHeight }));
+        }
     },
 
     _showContextMenu: function(e) {
@@ -949,12 +950,15 @@ var Preview = Utils.defineClass({
 
     _updateHeader: function() {
         if (headerHeight) {
-            let iconTextureSize = headerHeight / scaleFactor * .6;
+            let iconTextureSize = Me.settings.get_boolean('window-preview-use-custom-icon-size') ? 
+                                  Me.settings.get_int('window-preview-custom-icon-size') : 
+                                  headerHeight / scaleFactor * .6;
             let icon = this._previewMenu.getCurrentAppIcon().app.create_icon_texture(iconTextureSize);
             let workspaceIndex = '';
             let workspaceStyle = null;
+            let fontScale = Me.desktopSettings.get_double('text-scaling-factor');
             let commonTitleStyles = 'color: ' + Me.settings.get_string('window-preview-title-font-color') + ';' +
-                                    'font-size: ' + Me.settings.get_int('window-preview-title-font-size') + 'px;' +
+                                    'font-size: ' + Me.settings.get_int('window-preview-title-font-size') * fontScale + 'px;' +
                                     'font-weight: ' + Me.settings.get_string('window-preview-title-font-weight') + ';';
             
             this._iconBin.destroy_all_children();
@@ -1125,7 +1129,7 @@ var WindowCloneLayout = Utils.defineClass({
             height + (this.bufferRect.height - this.frameRect.height) * this.ratio
         );
 
-        actor.get_first_child().allocate(box, flags);
+        Utils.allocate(actor.get_first_child(), box, flags);
     }
 });
 
