@@ -2,9 +2,12 @@
   <img src="/media/design/svg/D2P_logo.svg" width="620"/>
 </p>
 <p align="left">
-    <img src="/media/design/svg/GitHub_logo.svg" width="120" style="margin-left: 4px"/>
-    <a href="https://extensions.gnome.org/extension/1160/dash-to-panel/" >
+    <img src="/media/design/svg/GitHub_logo.svg" width="120"/>&nbsp;
+    <a href="https://extensions.gnome.org/extension/1160/dash-to-panel/" style="margin-left: 20px">
         <img src="/media/design/svg/Gnome_logo.svg" width="120px"/>
+    </a>&nbsp;
+    <a href="https://www.paypal.com/donate/?hosted_button_id=5DCVELP7BSAVQ">
+        <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" />
     </a>
 </p>
 
@@ -101,7 +104,7 @@ Beyond that, just about every aspect of the panel is fully customizable. From po
 **To install the most recent official release:
 [Visit Dash-to-Panel at GNOME Extensions](https://extensions.gnome.org/extension/1160/dash-to-panel/)**
 
-To install a development version from source, please see the [Installation wiki page](https://github.com/jderose9/dash-to-panel/wiki/Installation).
+To install a development version from source, please see the [Installation wiki page](https://github.com/home-sweet-gnome/dash-to-panel/wiki/Installation).
 
 ## 
 ### FAQ
@@ -110,11 +113,11 @@ How do I customize the panel? [See the Wiki](https://github.com/home-sweet-gnome
 
 How do I embed my bottom left notification drawer into the panel like a system tray? [Top Icons Plus](https://extensions.gnome.org/extension/2311/topicons-plus) or [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support)
 
-How do I add a traditional start menu? [Arc Menu](https://extensions.gnome.org/extension/1228/arc-menu/)
+How do I add a traditional start menu? [Arc Menu](https://extensions.gnome.org/extension/3628/arcmenu/)
 
 How do I disable the hot corner? [No Topleft Hot Corner](https://extensions.gnome.org/extension/118/no-topleft-hot-corner)
 
-How do I move the notifications to somewhere other than the top center? [Panel OSD](https://extensions.gnome.org/extension/708/panel-osd)
+How do I move the notifications to somewhere other than the top center? [Notification Banner Reloaded](https://extensions.gnome.org/extension/4651/notification-banner-reloaded/)
 
 How do I display Minimize & Maximize buttons? In the Tweak Tool application, turn on `Windows > Titlebar Buttons > Minimize & Maximize`.
 
@@ -134,17 +137,10 @@ This extension has been tested with Gnome 3.18+.
 
 This extension manipulates the Gnome Main Panel, aka Top Bar. So, most other extensions which operate on the top bar should be compatible.
 
-## 
-### Donation
-
-Dash-to-Panel is provided free of charge. If it has improved your workflow, or you had a great support experience, feel free to say thanks by making a donation to the developers. (If you would like your donation to go to a specific developer, you may mention it in the note field during payment)
-
-[![Donate via Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y5PBB2CRJ6F2W&source=url)
-
 ##
 ### Volunteers needed!
 
-This extension could be even better with your help! Any items in the issue tracker labelled `help wanted` or `good first issue` are up for grabs. For more info, see the [Contributing wiki page](https://github.com/jderose9/dash-to-panel/wiki/Contributing).
+This extension could be even better with your help! Any items in the issue tracker labelled `help wanted` or `good first issue` are up for grabs. For more info, see the [Contributing wiki page](https://github.com/home-sweet-gnome/dash-to-panel/wiki/Contributing).
 
 ## 
 ### Credits
@@ -167,27 +163,37 @@ Ideas for recursing child actors and assigning inline styles are based on code f
 - @robrobinbin for configuring appMenu on/off in the panel
 - @MartinPL for toggling favorites on/off in panel
 - @jackwickham for thumbnail middle and right click actions
-- @abakkk for centering the taskbar icons in the panel
+- @abakkk for centering the taskbar icons in the panel, and animated taskbar hovering
 - @quasoft for changing of font weight of ungrouped application titles
 - @jordanribera for using icon's dominant color as running indicator color
 - @tper0700 for dynamically building context menu based on system capabilities
 - @levacic for configurable minimized application title font color
 - @l3nn4rt for toggling workspace switch popup
 - @hlechner for adjustable show desktop line color and window preview icon size
+- @ArtyomZorin for animated urgent icons
+- @jvpessoa10 for additional click window cycle options
+- @marksvc for assigning percent of display for panel length
+- @philippun1 for GNOME 40 support :rocket:
+- @HaselLoyance for toggle for notification counter badge
+- @rastersoft for Desktop Icons NG integration
+- @max-dw-i for symbolic icons
+- @Hirnmoder for Beautify DTP and panel border
+- @JimBroad for grayscale icons
+- @lufog for Gnome 50 support
 
 #### Bug Fixes: 
-@imrvelj, @Teslator, @bil-elmoussaoui, @brandon-schumann, @sw9, @rockon999 , @lexruee, @3v1n0, @freeroot, @moqmar, @ArtyomZorin, @lkc0987, @saibotk, @vanillajonathan, @Zkdc, @leebickmtu, @l3nn4rt, @Melix19
+@imrvelj, @Teslator, @bil-elmoussaoui, @brandon-schumann, @sw9, @rockon999 , @lexruee, @3v1n0, @freeroot, @moqmar, @ArtyomZorin, @lkc0987, @saibotk, @vanillajonathan, @Zkdc, @leebickmtu, @l3nn4rt, @Melix19, @Aikatsui, @melix99, @kyrillzorin, @oneshadab, @CorvetteCole, @vantu5z, @spectreseven1138, @aperezdc, @smedir, @lucaxvi, @andyholmes, @vowstar, @T99Rots, @City-busz, @guoqiyi, @gcrabbe, @Anduin2017, @xalt7x, @Survolog, @TorosFanny
 
 #### Documentation Improvements:
-@BoQsc, @zakkak, @dandv
+@BoQsc, @zakkak, @dandv, @elliotwutingfeng
 
 #### Translations: 
-@frnogueira (pt_BR), @zeten30 (cs), @franglais125 / @calotam / @oeramirez (es), @LaurentTreguier / @SolarLiner (fr), @elsieholmes (uk), @hosiet (zh\_CN), @jonnius / @linuxr01 (de), @urbalazs / @pappfer (hu), @crayxt (kk), @pkomur / @MartinPL / @alex4401 (pl), @AlexGluck / @GoodNike / @rjapolov (ru), @sicklylife-jp / @ryonakano (ja), @oltulu / @TeknoMobil / @daenney (tr), @sbadux / @kowalski7cc / @l3nn4rt (it), @OriginCode / @pan93412 (zh\_TW), @ojn (sv), @frandieguez (gl)
+@frnogueira / @victorwpbastos / @vagkaefer / @jotavionm (pt_BR), @zeten30 / @Amereyeu (cs), @franglais125 / @calotam / @oeramirez / @jhonatanseminario / @oscfdezdz (es), @LaurentTreguier / @SolarLiner / @DelphinPETER (fr), @elsieholmes / @xalt7x (uk), @hosiet / @zhmars (zh\_CN), @jonnius / @linuxr01 / @Etamuk / @daPhipz (de), @urbalazs / @pappfer (hu), @crayxt (kk), @pkomur / @MartinPL / @alex4401 / @konradmb / @alewicki95 / @0rzech (pl), @AlexGluck / @GoodNike / @rjapolov / @vantu5z / @Keleth / @code-ascend / @antohami (ru), @sicklylife-jp / @ryonakano / @nexryai / @Umoxfo (ja), @oltulu / @TeknoMobil / @daenney / @osmancoskun (tr), @sbadux / @kowalski7cc / @l3nn4rt / @albanobattistella (it), @OriginCode / @pan93412 (zh\_TW), @ojn (sv), @frandieguez (gl), @kuroehanako / @MarongHappy (ko), @jose1711 / @dodog (sk), @eshagh79 (fa), @EkaterinePapava (ka), @jamalkamaladdin (az)
 
 
 ## 
 ### License & Terms ![](media/design/png/copyleft-16.png)
 
-Dash to Panel is available under the terms of the GPL-v2 or later license See [`COPYING`](https://github.com/jderose9/dash-to-panel/blob/master/COPYING) for details.
+Dash to Panel is available under the terms of the GPL-v2 or later license See [`COPYING`](https://github.com/home-sweet-gnome/dash-to-panel/blob/master/COPYING) for details.
 
 ![](https://img.shields.io/badge/Language-JavaScript-yellow.svg) ![](https://img.shields.io/badge/Licence-GPL--2.0-blue.svg)
